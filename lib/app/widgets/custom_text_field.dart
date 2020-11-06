@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: false,
       controller: textEditingController,
       decoration: InputDecoration(
           labelText: text, labelStyle: TextStyle(color: Colors.blueAccent)),

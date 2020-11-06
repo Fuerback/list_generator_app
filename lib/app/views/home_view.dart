@@ -11,11 +11,11 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   List<ItemList> _itemsList = [
-    ItemList("lista 1", false, []),
-    ItemList("lista 2", false, []),
-    ItemList("lista 3", false, []),
-    ItemList("lista 4", false, []),
-    ItemList("lista 5", false, [])
+    ItemList("lista 1", false, Map()),
+    ItemList("lista 2", false, Map()),
+    ItemList("lista 3", false, Map()),
+    ItemList("lista 4", false, Map()),
+    ItemList("lista 5", false, Map())
   ];
 
   @override
@@ -24,8 +24,15 @@ class _HomeViewState extends State<HomeView> {
 
     void _addList() {
       setState(() {
-        ItemList itemList = ItemList("", false, []);
+        Map<String, dynamic> newToDo = Map();
+        newToDo["description"] = "item 1";
+        newToDo["done"] = false;
+
+        FocusScope.of(context).nextFocus();
+
+        ItemList itemList = ItemList("", false, Map());
         itemList.name = _listController.text;
+        itemList.items.addAll(newToDo);
         _listController.text = "";
         _itemsList.add(itemList);
       });

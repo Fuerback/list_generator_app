@@ -24,6 +24,7 @@ class _DetailsListViewState extends State<DetailsListView> {
 
     void _addItem() {
       setState(() {
+        FocusScope.of(context).nextFocus();
         Item item = Item("", false);
         item.description = _listController.text;
         _listController.text = "";
