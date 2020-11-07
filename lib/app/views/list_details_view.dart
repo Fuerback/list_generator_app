@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:list_generator/app/models/item.dart';
+import 'package:list_generator/app/models/todo_item_model.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
 
-class DetailsListView extends StatefulWidget {
+class ListDetailsView extends StatefulWidget {
   @override
-  _DetailsListViewState createState() => _DetailsListViewState();
+  _ListDetailsViewState createState() => _ListDetailsViewState();
 }
 
-class _DetailsListViewState extends State<DetailsListView> {
-  List<Item> items = [
-    Item("Item 1", false),
-    Item("Item 2", false),
-    Item("Item 3", false),
-    Item("Item 4", false),
-    Item("Item 5", false),
-    Item("Item 6", false)
+class _ListDetailsViewState extends State<ListDetailsView> {
+  List<ToDoItem> items = [
+    ToDoItem('item 1', todoId: '1'),
+    ToDoItem('item 2', todoId: '1')
   ];
 
   @override
@@ -25,8 +21,7 @@ class _DetailsListViewState extends State<DetailsListView> {
     void _addItem() {
       setState(() {
         FocusScope.of(context).nextFocus();
-        Item item = Item("", false);
-        item.description = _listController.text;
+        ToDoItem item = ToDoItem(_listController.text, todoId: '1');
         _listController.text = "";
         items.add(item);
       });

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:list_generator/app/models/item_list.dart';
-import 'package:list_generator/app/views/details_list_view.dart';
+import 'package:list_generator/app/models/todo_model.dart';
+import 'package:list_generator/app/views/list_details_view.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
 
@@ -10,12 +10,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  List<ItemList> _itemsList = [
-    ItemList("lista 1", false, Map()),
-    ItemList("lista 2", false, Map()),
-    ItemList("lista 3", false, Map()),
-    ItemList("lista 4", false, Map()),
-    ItemList("lista 5", false, Map())
+  List<ToDo> _itemsList = [
+    ToDo(name: 'lista 1', id: '1'),
+    ToDo(name: 'lista 2', id: '2'),
+    ToDo(name: 'lista 3', id: '3')
   ];
 
   @override
@@ -30,9 +28,7 @@ class _HomeViewState extends State<HomeView> {
 
         FocusScope.of(context).nextFocus();
 
-        ItemList itemList = ItemList("", false, Map());
-        itemList.name = _listController.text;
-        itemList.items.addAll(newToDo);
+        ToDo itemList = ToDo(name: _listController.text);
         _listController.text = "";
         _itemsList.add(itemList);
       });
@@ -56,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DetailsListView()));
+                            builder: (context) => ListDetailsView()));
                   },
                 );
               },
