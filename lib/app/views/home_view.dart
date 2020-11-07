@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:list_generator/app/db/db_provider.dart';
+import 'package:list_generator/app/controllers/home_controller.dart';
 import 'package:list_generator/app/models/todo_model.dart';
 import 'package:list_generator/app/views/list_details_view.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
@@ -11,16 +11,16 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  List<ToDo> _itemsList = List();
+  List<ToDo> _toDoList = List();
 
-  DBProvider dbProvider = DBProvider.db;
+  HomeController homeController = HomeController();
 
   @override
   void initState() {
     super.initState();
-    dbProvider.getAllToDo().then((list) {
+    homeController.getAllToDo().then((list) {
       setState(() {
-        _itemsList = list;
+        _toDoList = list;
       });
     });
   }
@@ -33,8 +33,8 @@ class _HomeViewState extends State<HomeView> {
       setState(() {
         ToDo todo = ToDo(name: _listController.text);
         _listController.text = "";
-        _itemsList.add(todo);
-        dbProvider.insertTodo(todo);
+        _toDoList.add(todo);
+        homeController.insertTodo(todo);
         FocusScope.of(context).nextFocus();
       });
     }
@@ -47,17 +47,14 @@ class _HomeViewState extends State<HomeView> {
         children: <Widget>[
           Expanded(
             child: ListView.separated(
-              itemCount: _itemsList.length,
+              itemCount: _toDoList.length,
               itemBuilder: (_, index) {
                 return ListTile(
                   title: Text(
-                    '${_itemsList[index].name}',
+                    '${_toDoList[index].name}',
                   ),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ListDetailsView()));
+                    _showListDetailsView();
                   },
                 );
               },
@@ -85,5 +82,14 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
     );
+  }
+
+  void _showListDetailsView({ToDo toDo}) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ListDetailsView(
+                  toDo: toDo,
+                )));
   }
 }
