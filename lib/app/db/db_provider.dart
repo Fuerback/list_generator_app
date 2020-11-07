@@ -12,7 +12,7 @@ class DBProvider {
 
   get _dbPath async {
     String documentsDirectory = await _localPath;
-    return path.join(documentsDirectory, "Todo.db");
+    return path.join(documentsDirectory, "todotest.db");
   }
 
   Future<String> get _localPath async {
@@ -83,7 +83,7 @@ class DBProvider {
     return db.insert('Todo', todo.toJson());
   }
 
-  Future<int> insertTask(ToDoItem item) async {
+  Future<int> insertItem(ToDoItem item) async {
     final db = await database;
     return db.insert('Item', item.toJson());
   }

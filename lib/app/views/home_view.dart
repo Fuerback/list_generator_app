@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:list_generator/app/db/db_provider.dart';
 import 'package:list_generator/app/models/todo_model.dart';
 import 'package:list_generator/app/views/list_details_view.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
@@ -10,11 +11,19 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  List<ToDo> _itemsList = [
-    ToDo(name: 'lista 1', id: '1'),
-    ToDo(name: 'lista 2', id: '2'),
-    ToDo(name: 'lista 3', id: '3')
-  ];
+  List<ToDo> _itemsList = List();
+
+  DBProvider dbProvider = DBProvider.db;
+
+  @override
+  void initState() {
+    super.initState();
+    dbProvider.getAllToDo().then((list) {
+      setState(() {
+        _itemsList = list;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +31,11 @@ class _HomeViewState extends State<HomeView> {
 
     void _addList() {
       setState(() {
-        Map<String, dynamic> newToDo = Map();
-        newToDo["description"] = "item 1";
-        newToDo["done"] = false;
-
-        FocusScope.of(context).nextFocus();
-
-        ToDo itemList = ToDo(name: _listController.text);
+        ToDo todo = ToDo(name: _listController.text);
         _listController.text = "";
-        _itemsList.add(itemList);
+        _itemsList.add(todo);
+        dbProvider.insertTodo(todo);
+        FocusScope.of(context).nextFocus();
       });
     }
 
