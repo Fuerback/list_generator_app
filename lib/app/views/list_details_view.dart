@@ -42,23 +42,25 @@ class _ListDetailsViewState extends State<ListDetailsView> {
       body: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.fromLTRB(17.0, 3.0, 7.0, 8.0),
+            padding: EdgeInsets.fromLTRB(17.0, 8.0, 7.0, 8.0),
             child: Row(
               children: <Widget>[
                 Expanded(
                     child: CustomTextField(
-                  text: "Novo item",
+                  hintText: "Novo item",
                   textEditingController: _listController,
                 )),
-                CustomRaisedButton(
+                FloatingActionButton.extended(
                   onPressed: _addItem,
-                  text: "Add +",
+                  icon: const Icon(Icons.add),
+                  label: Text("Item"),
                 )
               ],
             ),
           ),
           Expanded(
             child: RefreshIndicator(
+              backgroundColor: Colors.white,
               child: ListView.separated(
                 itemCount: items.length,
                 itemBuilder: (_, index) {

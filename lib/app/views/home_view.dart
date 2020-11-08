@@ -39,6 +39,7 @@ class _HomeViewState extends State<HomeView> {
         children: <Widget>[
           Expanded(
             child: RefreshIndicator(
+              backgroundColor: Colors.white,
               child: ListView.separated(
                 itemCount: _toDoList.length,
                 itemBuilder: (context, index) {
@@ -94,6 +95,7 @@ class _HomeViewState extends State<HomeView> {
                 title: Text("Criar nova lista"),
                 content: CustomTextField(
                   textEditingController: _listController,
+                  hintText: "Nome da lista",
                 ),
                 actions: [
                   FlatButton(
@@ -147,12 +149,13 @@ class _HomeViewState extends State<HomeView> {
                                       borderRadius: BorderRadius.circular(10)),
                                   title: Text("Editar Lista"),
                                   content: CustomTextField(
-                                    text: _toDoList[index].name,
+                                    hintText: _toDoList[index].name,
                                     textEditingController: _editListController,
                                   ),
                                   actions: [
                                     FlatButton(
                                         onPressed: () {
+                                          _editListController.text = "";
                                           Navigator.of(context).pop();
                                         },
                                         child: Text("Cancelar")),
