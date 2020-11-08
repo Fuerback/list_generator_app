@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomRaisedButton extends StatelessWidget {
   final String text;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
   CustomRaisedButton({this.text, this.onPressed});
 

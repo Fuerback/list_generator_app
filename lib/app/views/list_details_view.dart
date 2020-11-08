@@ -18,6 +18,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
   List<ToDoItem> items = List();
 
   ToDo _toDoSelected;
+  final _listController = TextEditingController();
 
   ListDetailsController listDetailsController = ListDetailsController();
 
@@ -34,19 +35,6 @@ class _ListDetailsViewState extends State<ListDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    final _listController = TextEditingController();
-
-    void _addItem() {
-      setState(() {
-        FocusScope.of(context).nextFocus();
-        ToDoItem item =
-            ToDoItem(_listController.text, todoId: _toDoSelected.id);
-        listDetailsController.insertItem(item);
-        _listController.text = "";
-        items.add(item);
-      });
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text(_toDoSelected.name)),
@@ -112,5 +100,18 @@ class _ListDetailsViewState extends State<ListDetailsView> {
     setState(() {
       listDetailsController.sortItems(items);
     });
+  }
+
+  void _addItem() {
+    if (_listController.text.isNotEmpty) {
+      setState(() {
+        FocusScope.of(context).nextFocus();
+        ToDoItem item =
+            ToDoItem(_listController.text, todoId: _toDoSelected.id);
+        listDetailsController.insertItem(item);
+        _listController.text = "";
+        items.add(item);
+      });
+    }
   }
 }

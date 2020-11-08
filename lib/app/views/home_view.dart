@@ -12,6 +12,9 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   List<ToDo> _toDoList = List();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _listController = TextEditingController();
+  final _editListController = TextEditingController();
 
   HomeController homeController = HomeController();
 
@@ -27,19 +30,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final _listController = TextEditingController();
-
-    void _addList() {
-      setState(() {
-        ToDo todo = ToDo(name: _listController.text);
-        _listController.text = "";
-        _toDoList.add(todo);
-        homeController.insertTodo(todo);
-        FocusScope.of(context).nextFocus();
-      });
-    }
-
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Center(child: Text('Minhas listas')),
       ),
@@ -73,28 +65,7 @@ class _HomeViewState extends State<HomeView> {
                       _showListDetailsView(_toDoList[index]);
                     },
                     onLongPress: () {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext bc) {
-                            return Container(
-                              child: new Wrap(
-                                children: <Widget>[
-                                  new ListTile(
-                                      leading: new Icon(Icons.edit),
-                                      title: new Text('Editar'),
-                                      onTap: () => {}),
-                                  new ListTile(
-                                    leading: new Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                    title: new Text('Deletar'),
-                                    onTap: () => {},
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
+                      return modalBottomSheet(context, index);
                     },
                   );
                 },
@@ -116,7 +87,7 @@ class _HomeViewState extends State<HomeView> {
                 )),
                 CustomRaisedButton(
                   onPressed: _addList,
-                  text: "Add +",
+                  text: "Add",
                 )
               ],
             ),
@@ -124,6 +95,84 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
     );
+  }
+
+  Future modalBottomSheet(BuildContext context, int index) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return BottomSheet(
+              onClosing: () {},
+              builder: (context) {
+                return Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: new BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: new BorderRadius.only(
+                          topLeft: const Radius.circular(10.0),
+                          topRight: const Radius.circular(10.0))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  title: Text("Editar Lista"),
+                                  content: CustomTextField(
+                                    text: _toDoList[index].name,
+                                    textEditingController: _editListController,
+                                  ),
+                                  actions: [
+                                    FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Cancelar")),
+                                    CustomRaisedButton(
+                                      onPressed: () {
+                                        _toDoList[index].name =
+                                            _editListController.text;
+                                        _editListController.text = "";
+                                        homeController
+                                            .updateTodo(_toDoList[index]);
+                                        Navigator.of(context).pop();
+                                      },
+                                      text: "Editar",
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Text(
+                            "Editar",
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 20.0),
+                          )),
+                      FlatButton(
+                          onPressed: () {
+                            setState(() {
+                              homeController.removeTodo(_toDoList[index]);
+                              _toDoList.removeAt(index);
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Text(
+                            "Excluir",
+                            style: TextStyle(color: Colors.red, fontSize: 20.0),
+                          ))
+                    ],
+                  ),
+                );
+              });
+        });
   }
 
   void _setFavorite(BuildContext context, ToDo toDo) {
@@ -154,5 +203,17 @@ class _HomeViewState extends State<HomeView> {
     setState(() {
       homeController.sortLists(_toDoList);
     });
+  }
+
+  void _addList() {
+    if (_listController.text.isNotEmpty) {
+      setState(() {
+        ToDo todo = ToDo(name: _listController.text);
+        _listController.text = "";
+        _toDoList.add(todo);
+        homeController.insertTodo(todo);
+        FocusScope.of(context).nextFocus();
+      });
+    }
   }
 }

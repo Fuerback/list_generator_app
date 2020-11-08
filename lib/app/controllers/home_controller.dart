@@ -18,6 +18,10 @@ class HomeController {
     return dbProvider.updateTodo(todo);
   }
 
+  Future<void> removeTodo(ToDo todo) async {
+    dbProvider.removeTodo(todo);
+  }
+
   void sortLists(List<ToDo> lists) {
     lists.sort((a, b) {
       if (b.isStarred && !a.isStarred)

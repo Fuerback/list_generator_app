@@ -9,7 +9,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'List Generator App',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(),
+        theme: ThemeData(primaryColor: Colors.blue)
+            .copyWith(canvasColor: Colors.transparent),
         home: HomeView());
   }
 }
