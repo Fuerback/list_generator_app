@@ -75,7 +75,8 @@ class _ListDetailsViewState extends State<ListDetailsView> {
                 itemCount: items.length,
                 itemBuilder: (_, index) {
                   return CheckboxListTile(
-                    title: Text(items[index].description),
+                    title: Text(items[index].description,
+                        style: TextStyle(fontSize: 18.0)),
                     onChanged: (bool value) {
                       _updateTask(index, value);
                     },

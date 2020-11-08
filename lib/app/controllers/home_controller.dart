@@ -5,7 +5,9 @@ class HomeController {
   DBProvider dbProvider = DBProvider.db;
 
   Future<List<ToDo>> getAllToDo() async {
-    return await dbProvider.getAllToDo();
+    var allToDo = await dbProvider.getAllToDo();
+    sortLists(allToDo);
+    return allToDo;
   }
 
   Future<int> insertTodo(ToDo toDo) async {
@@ -14,5 +16,16 @@ class HomeController {
 
   Future<int> updateTodo(ToDo todo) async {
     return dbProvider.updateTodo(todo);
+  }
+
+  void sortLists(List<ToDo> lists) {
+    lists.sort((a, b) {
+      if (b.isStarred && !a.isStarred)
+        return 1;
+      else if (!b.isStarred && a.isStarred)
+        return -1;
+      else
+        return 0;
+    });
   }
 }

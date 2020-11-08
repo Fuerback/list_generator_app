@@ -49,10 +49,14 @@ class _HomeViewState extends State<HomeView> {
             child: RefreshIndicator(
               child: ListView.separated(
                 itemCount: _toDoList.length,
-                itemBuilder: (_, index) {
+                itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(
-                      '${_toDoList[index].name}',
+                    title: Center(
+                      child: Text(
+                        '${_toDoList[index].name}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18.0),
+                      ),
                     ),
                     trailing: GestureDetector(
                       child: _toDoList[index].isStarred
@@ -62,15 +66,35 @@ class _HomeViewState extends State<HomeView> {
                             )
                           : Icon(Icons.star_border),
                       onTap: () {
-                        setState(() {
-                          _toDoList[index].starred =
-                              _toDoList[index].isStarred ? 0 : 1;
-                          homeController.updateTodo(_toDoList[index]);
-                        });
+                        _setFavorite(context, _toDoList[index]);
                       },
                     ),
                     onTap: () {
                       _showListDetailsView(_toDoList[index]);
+                    },
+                    onLongPress: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext bc) {
+                            return Container(
+                              child: new Wrap(
+                                children: <Widget>[
+                                  new ListTile(
+                                      leading: new Icon(Icons.edit),
+                                      title: new Text('Editar'),
+                                      onTap: () => {}),
+                                  new ListTile(
+                                    leading: new Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    title: new Text('Deletar'),
+                                    onTap: () => {},
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
                     },
                   );
                 },
@@ -102,6 +126,19 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  void _setFavorite(BuildContext context, ToDo toDo) {
+    setState(() {
+      toDo.starred = toDo.isStarred ? 0 : 1;
+      homeController.updateTodo(toDo);
+    });
+    final snack = SnackBar(
+      content: Text('Lista \'${toDo.name}\' favoritada.'),
+      duration: Duration(seconds: 1),
+    );
+
+    Scaffold.of(context).showSnackBar(snack);
+  }
+
   void _showListDetailsView(ToDo toDo) {
     Navigator.push(
         context,
@@ -113,5 +150,9 @@ class _HomeViewState extends State<HomeView> {
 
   Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      homeController.sortLists(_toDoList);
+    });
   }
 }

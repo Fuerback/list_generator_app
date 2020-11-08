@@ -10,7 +10,9 @@ class ListDetailsController {
   }
 
   Future<List<ToDoItem>> getAllToDoItems(ToDo toDo) async {
-    return await dbProvider.getAllToDoItems(toDo.id);
+    var allItems = await dbProvider.getAllToDoItems(toDo.id);
+    sortItems(allItems);
+    return allItems;
   }
 
   Future<int> updateTask(ToDoItem item) async {
