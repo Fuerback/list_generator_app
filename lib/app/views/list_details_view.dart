@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:list_generator/app/controllers/list_details_controller.dart';
 import 'package:list_generator/app/models/todo_item_model.dart';
 import 'package:list_generator/app/models/todo_model.dart';
+import 'package:list_generator/app/widgets/custom_app_bar.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
 
 class ListDetailsView extends StatefulWidget {
@@ -35,8 +36,8 @@ class _ListDetailsViewState extends State<ListDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text(_toDoSelected.name)),
+      appBar: CustomAppBar(
+        title: _toDoSelected.name,
       ),
       body: Column(
         children: <Widget>[

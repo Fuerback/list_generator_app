@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:list_generator/app/controllers/home_controller.dart';
 import 'package:list_generator/app/models/todo_model.dart';
 import 'package:list_generator/app/views/list_details_view.dart';
+import 'package:list_generator/app/widgets/custom_app_bar.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
 
@@ -32,8 +33,8 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Center(child: Text('Minhas listas')),
+      appBar: CustomAppBar(
+        title: 'Minhas listas',
       ),
       body: Column(
         children: <Widget>[
