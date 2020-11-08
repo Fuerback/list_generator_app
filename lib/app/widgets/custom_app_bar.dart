@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
   final String title;
+  final Icon actionIcon;
+  final VoidCallback onPressed;
 
-  const CustomAppBar({Key key, this.title}) : super(key: key);
+  const CustomAppBar({Key key, this.title, this.actionIcon, this.onPressed})
+      : super(key: key);
 
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
@@ -17,6 +20,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       title: Center(child: Text(widget.title)),
+      actions: widget.actionIcon != null
+          ? [IconButton(icon: widget.actionIcon, onPressed: widget.onPressed)]
+          : [],
       shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(60),

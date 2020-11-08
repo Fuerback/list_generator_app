@@ -94,7 +94,7 @@ class DBProvider {
     return db.delete('Item', where: 'id = ?', whereArgs: [item.id]);
   }
 
-  Future<int> updateTask(ToDoItem item) async {
+  Future<int> updateItem(ToDoItem item) async {
     final db = await database;
     return db
         .update('Item', item.toJson(), where: 'id = ?', whereArgs: [item.id]);

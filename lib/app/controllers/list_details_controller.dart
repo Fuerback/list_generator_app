@@ -15,8 +15,12 @@ class ListDetailsController {
     return allItems;
   }
 
-  Future<int> updateTask(ToDoItem item) async {
-    return dbProvider.updateTask(item);
+  Future<int> updateItem(ToDoItem item) async {
+    return dbProvider.updateItem(item);
+  }
+
+  Future<int> removeItem(ToDoItem item) async {
+    return dbProvider.removeItem(item);
   }
 
   void sortItems(List<ToDoItem> items) {

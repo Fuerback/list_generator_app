@@ -3,6 +3,7 @@ import 'package:list_generator/app/controllers/list_details_controller.dart';
 import 'package:list_generator/app/models/todo_item_model.dart';
 import 'package:list_generator/app/models/todo_model.dart';
 import 'package:list_generator/app/widgets/custom_app_bar.dart';
+import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
 
 class ListDetailsView extends StatefulWidget {
@@ -38,6 +39,10 @@ class _ListDetailsViewState extends State<ListDetailsView> {
     return Scaffold(
       appBar: CustomAppBar(
         title: _toDoSelected.name,
+        actionIcon: Icon(Icons.settings),
+        onPressed: () {
+          modalBottomSheet(context);
+        },
       ),
       body: Column(
         children: <Widget>[
@@ -69,7 +74,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
                     title: Text(items[index].description,
                         style: TextStyle(fontSize: 18.0)),
                     onChanged: (bool value) {
-                      _updateTask(index, value);
+                      _updateItem(index, value);
                     },
                     value: items[index].isDone,
                     secondary: CircleAvatar(
@@ -90,10 +95,107 @@ class _ListDetailsViewState extends State<ListDetailsView> {
     );
   }
 
-  void _updateTask(int index, bool done) {
+  Future modalBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return BottomSheet(
+              onClosing: () {},
+              builder: (context) {
+                return Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: new BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: new BorderRadius.only(
+                          topLeft: const Radius.circular(10.0),
+                          topRight: const Radius.circular(10.0))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _clearSelectedItems();
+                          },
+                          child: Text(
+                            "Limpar selecionados",
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 20.0),
+                          )),
+                      FlatButton(
+                          onPressed: () {
+                            setState(() {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    title: Text(
+                                        "Limpar lista " + _toDoSelected.name),
+                                    content: Text(
+                                        "Tem certeza que deseja limpar a lista?"),
+                                    actions: [
+                                      FlatButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("Não")),
+                                      CustomRaisedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          _clearAllItems();
+                                        },
+                                        text: "Sim",
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            });
+                          },
+                          child: Text(
+                            "Limpar lista",
+                            style: TextStyle(color: Colors.red, fontSize: 20.0),
+                          ))
+                    ],
+                  ),
+                );
+              });
+        });
+  }
+
+  void _clearSelectedItems() {
+    setState(() {
+      var toRemove = [];
+      items.forEach((item) {
+        if (item.isDone) {
+          toRemove.add(item);
+          listDetailsController.removeItem(item);
+        }
+      });
+
+      items.removeWhere((e) => toRemove.contains(e));
+    });
+  }
+
+  void _clearAllItems() {
+    setState(() {
+      items.forEach((item) {
+        listDetailsController.removeItem(item);
+      });
+
+      items.clear();
+    });
+  }
+
+  void _updateItem(int index, bool done) {
     setState(() {
       items[index].done = done ? 1 : 0;
-      listDetailsController.updateTask(items[index]);
+      listDetailsController.updateItem(items[index]);
     });
   }
 
