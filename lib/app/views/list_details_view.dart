@@ -3,6 +3,7 @@ import 'package:list_generator/app/controllers/list_details_controller.dart';
 import 'package:list_generator/app/models/todo_item_model.dart';
 import 'package:list_generator/app/models/todo_model.dart';
 import 'package:list_generator/app/widgets/custom_app_bar.dart';
+import 'package:list_generator/app/widgets/custom_info_message.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
 
@@ -16,7 +17,7 @@ class ListDetailsView extends StatefulWidget {
 }
 
 class _ListDetailsViewState extends State<ListDetailsView> {
-  List<ToDoItem> items = List();
+  List<ToDoItem> _items = List();
 
   ToDo _toDoSelected;
   final _listController = TextEditingController();
@@ -29,7 +30,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
     _toDoSelected = widget.toDo;
     listDetailsController.getAllToDoItems(_toDoSelected).then((list) {
       setState(() {
-        items = list;
+        _items = list;
       });
     });
   }
@@ -44,54 +45,59 @@ class _ListDetailsViewState extends State<ListDetailsView> {
           modalBottomSheet(context);
         },
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(17.0, 8.0, 7.0, 8.0),
-            child: Row(
+      body: _items.isEmpty
+          ? CustomInfoMessage(
+              message: "Você não possui itens ",
+            )
+          : Column(
               children: <Widget>[
+                Container(
+                  padding: EdgeInsets.fromLTRB(17.0, 8.0, 7.0, 8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: CustomTextField(
+                        autoFocus: false,
+                        hintText: "Novo item",
+                        textEditingController: _listController,
+                      )),
+                      FloatingActionButton.extended(
+                        onPressed: _addItem,
+                        icon: const Icon(Icons.add),
+                        label: Text("Item"),
+                      )
+                    ],
+                  ),
+                ),
                 Expanded(
-                    child: CustomTextField(
-                  autoFocus: false,
-                  hintText: "Novo item",
-                  textEditingController: _listController,
-                )),
-                FloatingActionButton.extended(
-                  onPressed: _addItem,
-                  icon: const Icon(Icons.add),
-                  label: Text("Item"),
+                  child: RefreshIndicator(
+                    backgroundColor: Colors.white,
+                    child: ListView.separated(
+                      itemCount: _items.length,
+                      itemBuilder: (_, index) {
+                        return CheckboxListTile(
+                          title: Text(_items[index].description,
+                              style: TextStyle(fontSize: 18.0)),
+                          onChanged: (bool value) {
+                            _updateItem(index, value);
+                          },
+                          value: _items[index].isDone,
+                          secondary: CircleAvatar(
+                            child: Icon(_items[index].isDone
+                                ? Icons.check
+                                : Icons.error),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (_, __) {
+                        return Divider();
+                      },
+                    ),
+                    onRefresh: _refresh,
+                  ),
                 )
               ],
             ),
-          ),
-          Expanded(
-            child: RefreshIndicator(
-              backgroundColor: Colors.white,
-              child: ListView.separated(
-                itemCount: items.length,
-                itemBuilder: (_, index) {
-                  return CheckboxListTile(
-                    title: Text(items[index].description,
-                        style: TextStyle(fontSize: 18.0)),
-                    onChanged: (bool value) {
-                      _updateItem(index, value);
-                    },
-                    value: items[index].isDone,
-                    secondary: CircleAvatar(
-                      child:
-                          Icon(items[index].isDone ? Icons.check : Icons.error),
-                    ),
-                  );
-                },
-                separatorBuilder: (_, __) {
-                  return Divider();
-                },
-              ),
-              onRefresh: _refresh,
-            ),
-          )
-        ],
-      ),
     );
   }
 
@@ -171,31 +177,31 @@ class _ListDetailsViewState extends State<ListDetailsView> {
   void _clearSelectedItems() {
     setState(() {
       var toRemove = [];
-      items.forEach((item) {
+      _items.forEach((item) {
         if (item.isDone) {
           toRemove.add(item);
           listDetailsController.removeItem(item);
         }
       });
 
-      items.removeWhere((e) => toRemove.contains(e));
+      _items.removeWhere((e) => toRemove.contains(e));
     });
   }
 
   void _clearAllItems() {
     setState(() {
-      items.forEach((item) {
+      _items.forEach((item) {
         listDetailsController.removeItem(item);
       });
 
-      items.clear();
+      _items.clear();
     });
   }
 
   void _updateItem(int index, bool done) {
     setState(() {
-      items[index].done = done ? 1 : 0;
-      listDetailsController.updateItem(items[index]);
+      _items[index].done = done ? 1 : 0;
+      listDetailsController.updateItem(_items[index]);
     });
   }
 
@@ -203,7 +209,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
     await Future.delayed(Duration(seconds: 1));
 
     setState(() {
-      listDetailsController.sortItems(items);
+      listDetailsController.sortItems(_items);
     });
   }
 
@@ -215,7 +221,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
             ToDoItem(_listController.text, todoId: _toDoSelected.id);
         listDetailsController.insertItem(item);
         _listController.text = "";
-        items.add(item);
+        _items.add(item);
       });
     }
   }
