@@ -97,6 +97,6 @@ class DBProvider {
   Future<int> updateTask(ToDoItem item) async {
     final db = await database;
     return db
-        .update('Task', item.toJson(), where: 'id = ?', whereArgs: [item.id]);
+        .update('Item', item.toJson(), where: 'id = ?', whereArgs: [item.id]);
   }
 }

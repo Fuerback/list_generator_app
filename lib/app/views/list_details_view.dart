@@ -70,23 +70,46 @@ class _ListDetailsViewState extends State<ListDetailsView> {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              itemCount: items.length,
-              itemBuilder: (_, index) {
-                return ListTile(
-                  title: Text(
-                    '${items[index].description}',
-                  ),
-                  onTap: () {},
-                );
-              },
-              separatorBuilder: (_, __) {
-                return Divider();
-              },
+            child: RefreshIndicator(
+              child: ListView.separated(
+                itemCount: items.length,
+                itemBuilder: (_, index) {
+                  return CheckboxListTile(
+                    title: Text(items[index].description),
+                    onChanged: (bool value) {
+                      _updateTask(index, value);
+                    },
+                    value: items[index].isDone,
+                    secondary: CircleAvatar(
+                      child:
+                          Icon(items[index].isDone ? Icons.check : Icons.error),
+                    ),
+                  );
+                },
+                separatorBuilder: (_, __) {
+                  return Divider();
+                },
+              ),
+              onRefresh: _refresh,
             ),
           )
         ],
       ),
     );
+  }
+
+  void _updateTask(int index, bool done) {
+    setState(() {
+      items[index].done = done ? 1 : 0;
+      listDetailsController.updateTask(items[index]);
+    });
+  }
+
+  Future<void> _refresh() async {
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      listDetailsController.sortItems(items);
+    });
   }
 }

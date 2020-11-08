@@ -46,21 +46,39 @@ class _HomeViewState extends State<HomeView> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.separated(
-              itemCount: _toDoList.length,
-              itemBuilder: (_, index) {
-                return ListTile(
-                  title: Text(
-                    '${_toDoList[index].name}',
-                  ),
-                  onTap: () {
-                    _showListDetailsView(_toDoList[index]);
-                  },
-                );
-              },
-              separatorBuilder: (_, __) {
-                return Divider();
-              },
+            child: RefreshIndicator(
+              child: ListView.separated(
+                itemCount: _toDoList.length,
+                itemBuilder: (_, index) {
+                  return ListTile(
+                    title: Text(
+                      '${_toDoList[index].name}',
+                    ),
+                    trailing: GestureDetector(
+                      child: _toDoList[index].isStarred
+                          ? Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            )
+                          : Icon(Icons.star_border),
+                      onTap: () {
+                        setState(() {
+                          _toDoList[index].starred =
+                              _toDoList[index].isStarred ? 0 : 1;
+                          homeController.updateTodo(_toDoList[index]);
+                        });
+                      },
+                    ),
+                    onTap: () {
+                      _showListDetailsView(_toDoList[index]);
+                    },
+                  );
+                },
+                separatorBuilder: (_, __) {
+                  return Divider();
+                },
+              ),
+              onRefresh: _refresh,
             ),
           ),
           Container(
@@ -91,5 +109,9 @@ class _HomeViewState extends State<HomeView> {
             builder: (context) => ListDetailsView(
                   toDo: toDo,
                 )));
+  }
+
+  Future<void> _refresh() async {
+    await Future.delayed(Duration(seconds: 1));
   }
 }

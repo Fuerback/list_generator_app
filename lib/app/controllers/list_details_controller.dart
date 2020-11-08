@@ -12,4 +12,19 @@ class ListDetailsController {
   Future<List<ToDoItem>> getAllToDoItems(ToDo toDo) async {
     return await dbProvider.getAllToDoItems(toDo.id);
   }
+
+  Future<int> updateTask(ToDoItem item) async {
+    return dbProvider.updateTask(item);
+  }
+
+  void sortItems(List<ToDoItem> items) {
+    items.sort((a, b) {
+      if (a.isDone && !b.isDone)
+        return 1;
+      else if (!a.isDone && b.isDone)
+        return -1;
+      else
+        return 0;
+    });
+  }
 }

@@ -11,4 +11,8 @@ class HomeController {
   Future<int> insertTodo(ToDo toDo) async {
     return await dbProvider.insertTodo(toDo);
   }
+
+  Future<int> updateTodo(ToDo todo) async {
+    return dbProvider.updateTodo(todo);
+  }
 }

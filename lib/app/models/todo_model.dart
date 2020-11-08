@@ -10,6 +10,10 @@ class ToDo {
   ToDo({@required this.name, this.starred = 0, String id})
       : this.id = id ?? Uuid().v4();
 
+  bool get isStarred {
+    return this.starred > 0;
+  }
+
   ToDo.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
