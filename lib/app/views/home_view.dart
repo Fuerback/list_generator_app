@@ -76,23 +76,44 @@ class _HomeViewState extends State<HomeView> {
               onRefresh: _refresh,
             ),
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(17.0, 2.0, 7.0, 8.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                    child: CustomTextField(
-                  text: "Nova lista",
-                  textEditingController: _listController,
-                )),
-                CustomRaisedButton(
-                  onPressed: _addList,
-                  text: "Add",
-                )
-              ],
-            ),
-          )
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        elevation: 4.0,
+        icon: const Icon(Icons.add),
+        label: const Text('Nova lista'),
+        onPressed: () {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                title: Text("Criar nova lista"),
+                content: CustomTextField(
+                  textEditingController: _listController,
+                ),
+                actions: [
+                  FlatButton(
+                      onPressed: () {
+                        _listController.text = "";
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Cancelar")),
+                  CustomRaisedButton(
+                    onPressed: () {
+                      _addList();
+                      Navigator.of(context).pop();
+                    },
+                    text: "Criar",
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }
