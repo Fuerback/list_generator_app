@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:list_generator/app/controllers/list_details_controller.dart';
 import 'package:list_generator/app/models/todo_item_model.dart';
 import 'package:list_generator/app/models/todo_model.dart';
-import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
 
 class ListDetailsView extends StatefulWidget {
@@ -47,6 +46,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
               children: <Widget>[
                 Expanded(
                     child: CustomTextField(
+                  autoFocus: false,
                   hintText: "Novo item",
                   textEditingController: _listController,
                 )),

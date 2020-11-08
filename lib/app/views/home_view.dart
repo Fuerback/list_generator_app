@@ -94,6 +94,7 @@ class _HomeViewState extends State<HomeView> {
                     borderRadius: BorderRadius.circular(10)),
                 title: Text("Criar nova lista"),
                 content: CustomTextField(
+                  autoFocus: true,
                   textEditingController: _listController,
                   hintText: "Nome da lista",
                 ),
@@ -149,6 +150,7 @@ class _HomeViewState extends State<HomeView> {
                                       borderRadius: BorderRadius.circular(10)),
                                   title: Text("Editar Lista"),
                                   content: CustomTextField(
+                                    autoFocus: true,
                                     hintText: _toDoList[index].name,
                                     textEditingController: _editListController,
                                   ),
