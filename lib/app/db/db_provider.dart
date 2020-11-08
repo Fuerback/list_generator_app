@@ -52,9 +52,10 @@ class DBProvider {
     return _database;
   }
 
-  Future<List<ToDoItem>> getAllToDoItems() async {
+  Future<List<ToDoItem>> getAllToDoItems(String toDoId) async {
     final db = await database;
-    var result = await db.query('Item');
+    var result =
+        await db.query('Item', where: 'todo_id = ?', whereArgs: [toDoId]);
     return result.map((it) => ToDoItem.fromJson(it)).toList();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:list_generator/app/controllers/list_details_controller.dart';
 import 'package:list_generator/app/models/todo_item_model.dart';
 import 'package:list_generator/app/models/todo_model.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
@@ -14,14 +15,21 @@ class ListDetailsView extends StatefulWidget {
 }
 
 class _ListDetailsViewState extends State<ListDetailsView> {
-  List<ToDoItem> items = [
-    ToDoItem('item 1', todoId: '1'),
-    ToDoItem('item 2', todoId: '1')
-  ];
+  List<ToDoItem> items = List();
+
+  ToDo _toDoSelected;
+
+  ListDetailsController listDetailsController = ListDetailsController();
 
   @override
   void initState() {
     super.initState();
+    _toDoSelected = widget.toDo;
+    listDetailsController.getAllToDoItems(_toDoSelected).then((list) {
+      setState(() {
+        items = list;
+      });
+    });
   }
 
   @override
@@ -31,7 +39,9 @@ class _ListDetailsViewState extends State<ListDetailsView> {
     void _addItem() {
       setState(() {
         FocusScope.of(context).nextFocus();
-        ToDoItem item = ToDoItem(_listController.text, todoId: '1');
+        ToDoItem item =
+            ToDoItem(_listController.text, todoId: _toDoSelected.id);
+        listDetailsController.insertItem(item);
         _listController.text = "";
         items.add(item);
       });
@@ -39,7 +49,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Nome lista')),
+        title: Center(child: Text(_toDoSelected.name)),
       ),
       body: Column(
         children: <Widget>[

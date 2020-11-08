@@ -13,13 +13,13 @@ class ToDoItem {
 
   ToDoItem.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        todoId = json['todoId'],
+        todoId = json['todo_id'],
         done = json['done'],
         description = json['description'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'todoId': todoId,
+        'todo_id': todoId,
         'done': done,
         'description': description,
       };

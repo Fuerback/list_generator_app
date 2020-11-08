@@ -54,7 +54,7 @@ class _HomeViewState extends State<HomeView> {
                     '${_toDoList[index].name}',
                   ),
                   onTap: () {
-                    _showListDetailsView();
+                    _showListDetailsView(_toDoList[index]);
                   },
                 );
               },
@@ -84,7 +84,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  void _showListDetailsView({ToDo toDo}) {
+  void _showListDetailsView(ToDo toDo) {
     Navigator.push(
         context,
         MaterialPageRoute(
