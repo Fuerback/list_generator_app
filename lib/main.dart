@@ -9,7 +9,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'List Generator App',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(primaryColor: Colors.blue)
+        theme: ThemeData(
+                primaryColor: Colors.lightBlue[900],
+                backgroundColor: Colors.lightBlue[900],
+                scaffoldBackgroundColor: Colors.lightBlue[900],
+                buttonColor: Colors.lightBlue[900],
+                floatingActionButtonTheme: FloatingActionButtonThemeData(
+                    backgroundColor: Colors.lightBlue[500]))
             .copyWith(canvasColor: Colors.transparent),
         home: HomeView());
   }

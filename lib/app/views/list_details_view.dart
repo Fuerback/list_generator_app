@@ -47,7 +47,6 @@ class _ListDetailsViewState extends State<ListDetailsView> {
             modalBottomSheet(context);
           },
         ),
-        backgroundColor: Colors.blue,
         body: CustomBodyRounded(
           child: Column(
             children: <Widget>[

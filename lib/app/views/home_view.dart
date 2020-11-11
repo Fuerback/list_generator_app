@@ -38,7 +38,6 @@ class _HomeViewState extends State<HomeView> {
       appBar: CustomAppBar(
         title: 'Minhas listas',
       ),
-      backgroundColor: Colors.blue,
       body: CustomBodyRounded(
         child: _toDoList.isEmpty
             ? CustomInfoMessage(

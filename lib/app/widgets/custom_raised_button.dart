@@ -9,7 +9,7 @@ class CustomRaisedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      color: Colors.blueAccent,
+      color: Colors.lightBlue[900],
       child: Text(text),
       textColor: Colors.white,
       onPressed: onPressed,
