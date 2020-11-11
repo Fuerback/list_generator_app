@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:list_generator/app/controllers/list_details_controller.dart';
 import 'package:list_generator/app/models/todo_item_model.dart';
 import 'package:list_generator/app/models/todo_model.dart';
+import 'package:list_generator/app/widgets/custom_add_item.dart';
 import 'package:list_generator/app/widgets/custom_app_bar.dart';
+import 'package:list_generator/app/widgets/custom_body_rounded.dart';
 import 'package:list_generator/app/widgets/custom_info_message.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
@@ -20,7 +22,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
   List<ToDoItem> _items = List();
 
   ToDo _toDoSelected;
-  final _listController = TextEditingController();
+  final _itemController = TextEditingController();
 
   ListDetailsController listDetailsController = ListDetailsController();
 
@@ -38,67 +40,57 @@ class _ListDetailsViewState extends State<ListDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: _toDoSelected.name,
-        actionIcon: Icon(Icons.settings),
-        onPressed: () {
-          modalBottomSheet(context);
-        },
-      ),
-      body: _items.isEmpty
-          ? CustomInfoMessage(
-              message: "Você não possui itens ",
-            )
-          : Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.fromLTRB(17.0, 8.0, 7.0, 8.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: CustomTextField(
-                        autoFocus: false,
-                        hintText: "Novo item",
-                        textEditingController: _listController,
-                      )),
-                      FloatingActionButton.extended(
-                        onPressed: _addItem,
-                        icon: const Icon(Icons.add),
-                        label: Text("Item"),
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: RefreshIndicator(
-                    backgroundColor: Colors.white,
-                    child: ListView.separated(
-                      itemCount: _items.length,
-                      itemBuilder: (_, index) {
-                        return CheckboxListTile(
-                          title: Text(_items[index].description,
-                              style: TextStyle(fontSize: 18.0)),
-                          onChanged: (bool value) {
-                            _updateItem(index, value);
+        appBar: CustomAppBar(
+          title: _toDoSelected.name,
+          actionIcon: Icon(Icons.settings),
+          onPressed: () {
+            modalBottomSheet(context);
+          },
+        ),
+        backgroundColor: Colors.blue,
+        body: CustomBodyRounded(
+          child: Column(
+            children: <Widget>[
+              CustomAddItem(
+                onPressed: _addItem,
+                itemController: _itemController,
+              ),
+              _items.isEmpty
+                  ? Expanded(
+                      child: CustomInfoMessage(
+                        message: "Você não possui itens ",
+                      ),
+                    )
+                  : Expanded(
+                      child: RefreshIndicator(
+                        backgroundColor: Colors.white,
+                        child: ListView.separated(
+                          itemCount: _items.length,
+                          itemBuilder: (_, index) {
+                            return CheckboxListTile(
+                              title: Text(_items[index].description,
+                                  style: TextStyle(fontSize: 18.0)),
+                              onChanged: (bool value) {
+                                _updateItem(index, value);
+                              },
+                              value: _items[index].isDone,
+                              secondary: CircleAvatar(
+                                child: Icon(_items[index].isDone
+                                    ? Icons.check
+                                    : Icons.error),
+                              ),
+                            );
                           },
-                          value: _items[index].isDone,
-                          secondary: CircleAvatar(
-                            child: Icon(_items[index].isDone
-                                ? Icons.check
-                                : Icons.error),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (_, __) {
-                        return Divider();
-                      },
-                    ),
-                    onRefresh: _refresh,
-                  ),
-                )
-              ],
-            ),
-    );
+                          separatorBuilder: (_, __) {
+                            return Divider();
+                          },
+                        ),
+                        onRefresh: _refresh,
+                      ),
+                    )
+            ],
+          ),
+        ));
   }
 
   Future modalBottomSheet(BuildContext context) {
@@ -214,13 +206,13 @@ class _ListDetailsViewState extends State<ListDetailsView> {
   }
 
   void _addItem() {
-    if (_listController.text.isNotEmpty) {
+    if (_itemController.text.isNotEmpty) {
       setState(() {
         FocusScope.of(context).nextFocus();
         ToDoItem item =
-            ToDoItem(_listController.text, todoId: _toDoSelected.id);
+            ToDoItem(_itemController.text, todoId: _toDoSelected.id);
         listDetailsController.insertItem(item);
-        _listController.text = "";
+        _itemController.text = "";
         _items.add(item);
       });
     }

@@ -23,10 +23,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       actions: widget.actionIcon != null
           ? [IconButton(icon: widget.actionIcon, onPressed: widget.onPressed)]
           : [],
-      shape: ContinuousRectangleBorder(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(60),
-              bottomRight: Radius.circular(60))),
+      elevation: 0.0,
     );
   }
 }

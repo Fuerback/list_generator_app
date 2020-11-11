@@ -3,6 +3,7 @@ import 'package:list_generator/app/controllers/home_controller.dart';
 import 'package:list_generator/app/models/todo_model.dart';
 import 'package:list_generator/app/views/list_details_view.dart';
 import 'package:list_generator/app/widgets/custom_app_bar.dart';
+import 'package:list_generator/app/widgets/custom_body_rounded.dart';
 import 'package:list_generator/app/widgets/custom_info_message.dart';
 import 'package:list_generator/app/widgets/custom_raised_button.dart';
 import 'package:list_generator/app/widgets/custom_text_field.dart';
@@ -37,54 +38,58 @@ class _HomeViewState extends State<HomeView> {
       appBar: CustomAppBar(
         title: 'Minhas listas',
       ),
-      body: _toDoList.isEmpty
-          ? CustomInfoMessage(
-              message: "Você não possui listas ",
-            )
-          : Column(
-              children: <Widget>[
-                Expanded(
-                  child: RefreshIndicator(
-                    backgroundColor: Colors.white,
-                    child: ListView.separated(
-                      itemCount: _toDoList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Center(
-                            child: Text(
-                              '${_toDoList[index].name}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18.0),
+      backgroundColor: Colors.blue,
+      body: CustomBodyRounded(
+        child: _toDoList.isEmpty
+            ? CustomInfoMessage(
+                message: "Você não possui listas ",
+              )
+            : Column(
+                children: <Widget>[
+                  Expanded(
+                    child: RefreshIndicator(
+                      backgroundColor: Colors.white,
+                      child: ListView.separated(
+                        itemCount: _toDoList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Center(
+                              child: Text(
+                                '${_toDoList[index].name}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0),
+                              ),
                             ),
-                          ),
-                          trailing: GestureDetector(
-                            child: _toDoList[index].isStarred
-                                ? Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  )
-                                : Icon(Icons.star_border),
+                            trailing: GestureDetector(
+                              child: _toDoList[index].isStarred
+                                  ? Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    )
+                                  : Icon(Icons.star_border),
+                              onTap: () {
+                                _setFavorite(context, _toDoList[index]);
+                              },
+                            ),
                             onTap: () {
-                              _setFavorite(context, _toDoList[index]);
+                              _showListDetailsView(_toDoList[index]);
                             },
-                          ),
-                          onTap: () {
-                            _showListDetailsView(_toDoList[index]);
-                          },
-                          onLongPress: () {
-                            return modalBottomSheet(context, index);
-                          },
-                        );
-                      },
-                      separatorBuilder: (_, __) {
-                        return Divider();
-                      },
+                            onLongPress: () {
+                              return modalBottomSheet(context, index);
+                            },
+                          );
+                        },
+                        separatorBuilder: (_, __) {
+                          return Divider();
+                        },
+                      ),
+                      onRefresh: _refresh,
                     ),
-                    onRefresh: _refresh,
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         elevation: 4.0,
