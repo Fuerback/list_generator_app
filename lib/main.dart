@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
                 scaffoldBackgroundColor: Colors.lightBlue[900],
                 buttonColor: Colors.lightBlue[900],
                 floatingActionButtonTheme: FloatingActionButtonThemeData(
-                    backgroundColor: Colors.lightBlue[500]))
+                    backgroundColor: Colors.blue[900]))
             .copyWith(canvasColor: Colors.transparent),
         home: HomeView());
   }

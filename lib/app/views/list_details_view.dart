@@ -117,7 +117,7 @@ class _ListDetailsViewState extends State<ListDetailsView> {
                           child: Text(
                             "Limpar selecionados",
                             style:
-                                TextStyle(color: Colors.grey, fontSize: 20.0),
+                                TextStyle(color: Colors.black, fontSize: 20.0),
                           )),
                       FlatButton(
                           onPressed: () {
